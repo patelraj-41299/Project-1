@@ -17,11 +17,11 @@ phases:
     commands:
       - echo Build completed.
       - echo "Deploying files to EC2 frontend server..."
-      # If the SSH key is stored in S3, download it to the CodeBuild environment
-      - aws s3 cp s3://your-bucket-name/new.pem /root/new.pem
-      - chmod 400 /root/new.pem  # Correct permission for the key
-      # Deploy built files to EC2 using the correct SSH key
-      - scp -i /root/new.pem -o StrictHostKeyChecking=no -r build/* ec2-user@3.17.175.235:/home/ec2-user/frontend_build/
+      # Download SSH key from S3
+      - aws s3 cp s3://codepipeline-us-east-2-0ab741571c44-4b6a-aa58-59431cee2267/new.pem /tmp/new.pem
+      - chmod 400 /tmp/new.pem  # Set proper permissions for the key
+      # Deploy the build files to EC2 using the correct SSH key
+      - scp -i /tmp/new.pem -o StrictHostKeyChecking=no -r build/* ec2-user@3.17.175.235:/home/ec2-user/frontend_build/
 
 artifacts:
   files:
